@@ -61,9 +61,9 @@ export default {
 
   data: () => ({}),
   created: function () {
-      if (location.hostname.indexOf('onrender.com') !== -1) {
-          location.href = 'https://gliamici.bisegna-vittori.fr'
-      }
+      // if (location.hostname.indexOf('onrender.com') !== -1) {
+      //     location.href = 'https://gliamici.bisegna-vittori.fr'
+      // }
   }
 };
 </script>
