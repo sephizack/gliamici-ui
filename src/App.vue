@@ -64,6 +64,7 @@ export default {
       // if (location.hostname.indexOf('onrender.com') !== -1) {
       //     location.href = 'https://gliamici.bisegna-vittori.fr'
       // }
+      window.history.pushState({}, document.title, "https://gliamici.bisegna-vittori.fr");
   }
 };
 </script>
