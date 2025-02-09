@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "yamlcompile": "yaml2json -s src/assets/recipes.yaml",
+    "recipes": "yaml2json -s src/assets/recipes.yaml && mkdir dist; cp src/assets/recipes.json dist/recipes.json && echo 'recipes copied to dist'",
     "serve": "( yaml2json -sw src/assets/recipes.yaml& ) && vue-cli-service serve; pkill -P $$",
-    "build": "yaml2json -s src/assets/recipes.yaml && vue-cli-service build",
+    "build": "yaml2json -s src/assets/recipes.yaml && vue-cli-service build &&cp src/assets/recipes.json dist/recipes.json",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

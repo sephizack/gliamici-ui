@@ -99,31 +99,11 @@ export default {
     recipes: [],
     categories: [],
     cart: {},
+    topLevelFilters: [],
+    subLevelFilters: [],
+
   }),
   computed: {
-    topLevelFilters: function () {
-      let rep = [];
-      for (let cat in recipesRawData) {
-        rep.push(cat);
-      }
-      return rep;
-    },
-    subLevelFilters: function () {
-      let rep = [];
-      if (this.filteredTopLevelCategory == "") {
-        return rep;
-      }
-      let catData = recipesRawData[this.filteredTopLevelCategory];
-      for (let subcat in catData) {
-        if (
-          typeof catData[subcat] == "object" &&
-          !("recipe" in catData[subcat])
-        ) {
-          rep.push(subcat);
-        }
-      }
-      return rep;
-    },
     filteredRecipes: function () {
       let rep = [];
       let search = this.curFreeSearch.toLowerCase();
@@ -153,6 +133,46 @@ export default {
     },
   },
   methods: {
+    updateRecipeData() {
+      fetch('./recipes.json')
+        .then(response => response.json())
+        .then(data => {
+          this.integrateRecipesData(data);
+        })
+        .catch(error => {
+          console.error('Error loading recipes:', error);
+          // Fallback to local data if fetch fails
+          this.integrateRecipesData(recipesRawData);
+        });
+  },
+    integrateRecipesData: function (data) {
+      this.computeRecipeData([], data);
+      this.computeTopLevelFilters(data);
+      this.computeSubLevelFilters(data);
+    },
+    computeTopLevelFilters: function (recipesData) {
+      let rep = [];
+      for (let cat in recipesData) {
+        rep.push(cat);
+      }
+      return rep;
+    },
+    computeSubLevelFilters: function (recipesData) {
+      let rep = [];
+      if (this.filteredTopLevelCategory == "") {
+        return rep;
+      }
+      let catData = recipesData[this.filteredTopLevelCategory];
+      for (let subcat in catData) {
+        if (
+          typeof catData[subcat] == "object" &&
+          !("recipe" in catData[subcat])
+        ) {
+          rep.push(subcat);
+        }
+      }
+      return rep;
+    },
     toogleCategory: function (category) {
       this.filteredSubLevelCategory = "";
       this.filteredTopLevelCategory =
@@ -219,7 +239,7 @@ export default {
     },
   },
   created: function () {
-    this.computeRecipeData([], recipesRawData);
+    this.updateRecipeData()
     try {
       let parsedStorage = JSON.parse(localStorage.getItem("cart"));
       if (parsedStorage) {
